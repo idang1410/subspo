@@ -5,19 +5,31 @@ from googletrans.models import Translated
 import srt
 
 LANG_DETECTION = "auto"
+CHUNK_SIZE = 30
+
+
+def chunks(lst, n):
+    """Yield successive n-sized chunks from lst."""
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
+
+
 """
 Make one ticket (one object), and translte all in a bulk for one request.
 Many tickets or requests will be seem like bot
 """
-
 def translate(lines: List[str], dst_lang: str, origin_lang: str = None) -> List[Translated]: 
     translator = Translator()
+    translated = []
+
     if not origin_lang: # language detection
         origin_lang = LANG_DETECTION
 
-    print(origin_lang)
-    outputs = translator.translate(lines, dest=dst_lang, src=origin_lang)
-    return outputs
+    for chunk in chunks(lines, CHUNK_SIZE):
+        outputs = translator.translate(chunks, dest=dst_lang, src=origin_lang)
+        transalted.extend(outputs)
+
+    return translated 
 
 
 def main(subs_file : str,  dst_lang: str, origin_lang: str):
