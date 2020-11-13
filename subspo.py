@@ -1,6 +1,7 @@
 from typing import List
 import argparse
-from googletrans import Translator
+from googletrans import Translator 
+from googletrans.models import Translated
 import srt
 
 LANG_DETECTION = "auto"
@@ -8,12 +9,14 @@ LANG_DETECTION = "auto"
 Make one ticket (one object), and translte all in a bulk for one request.
 Many tickets or requests will be seem like bot
 """
-def translate(lines: List[str], dst_lang: str, origin_lang: str = None):
+
+def translate(lines: List[str], dst_lang: str, origin_lang: str = None) -> List[Translated]: 
     translator = Translator()
     if not origin_lang: # language detection
         origin_lang = LANG_DETECTION
 
-    outputs = translator.translate(lines, dst=dst_lang, src=origin_lang)
+    print(origin_lang)
+    outputs = translator.translate(lines, dest=dst_lang, src=origin_lang)
     return outputs
 
 
@@ -29,7 +32,7 @@ def main(subs_file : str,  dst_lang: str, origin_lang: str):
     
     translated = translate(lines_content, dst_lang, origin_lang)
     for origin, new_content in zip(subs, translated):
-        origin.content = new_content 
+        origin.content = new_content.text
     
 
     with open(f"{subs_file}.out", "w") as file:
