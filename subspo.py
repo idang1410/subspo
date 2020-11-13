@@ -1,4 +1,5 @@
 from typing import List
+from tqdm import tqdm
 import argparse
 from googletrans import Translator 
 from googletrans.models import Translated
@@ -25,9 +26,9 @@ def translate(lines: List[str], dst_lang: str, origin_lang: str = None) -> List[
     if not origin_lang: # language detection
         origin_lang = LANG_DETECTION
 
-    for chunk in chunks(lines, CHUNK_SIZE):
-        outputs = translator.translate(chunks, dest=dst_lang, src=origin_lang)
-        transalted.extend(outputs)
+    for chunk in tqdm(chunks(lines, CHUNK_SIZE), total = len(lines)//CHUNK_SIZE):
+        outputs = translator.translate(chunk, dest=dst_lang, src=origin_lang)
+        translated.extend(outputs)
 
     return translated 
 
