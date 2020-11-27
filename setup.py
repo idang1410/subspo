@@ -16,5 +16,6 @@ setuptools.setup(
     classifiers = [
         "Programming language :: Python :: 3",
     ],
+    scripts=['subspo'],
     python_requires='>=3.6',
 )
